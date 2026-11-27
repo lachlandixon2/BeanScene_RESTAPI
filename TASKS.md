@@ -221,6 +221,8 @@ Acceptance:
 
 ### T011 - Implement staff endpoints
 
+Status: Complete
+
 Priority: P1
 Dependencies: T010
 
