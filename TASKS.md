@@ -124,6 +124,8 @@ Acceptance:
 
 ### T006 - Add password and JWT utilities
 
+Status: Complete
+
 Priority: P0
 Dependencies: T005
 
