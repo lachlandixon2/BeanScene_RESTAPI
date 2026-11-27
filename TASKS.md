@@ -336,6 +336,8 @@ Acceptance:
 
 ### T017 - Implement table model and repository
 
+Status: Complete
+
 Priority: P1
 Dependencies: T003
 

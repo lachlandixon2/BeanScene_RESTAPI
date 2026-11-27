@@ -39,6 +39,18 @@ export function errorHandler(
     return;
   }
 
+  if (error instanceof mongoose.Error.ValidationError) {
+    response.status(400).json({
+      success: false,
+      message: 'Invalid resource data',
+      errors: Object.values(error.errors).map((validationError) => ({
+        field: validationError.path,
+        message: validationError.message,
+      })),
+    });
+    return;
+  }
+
   if (error instanceof mongoose.mongo.MongoServerError && error.code === 11000) {
     response.status(409).json({
       success: false,
