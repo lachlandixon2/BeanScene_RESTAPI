@@ -244,6 +244,8 @@ Acceptance:
 
 ### T012 - Implement category model and repository
 
+Status: Complete
+
 Priority: P1
 Dependencies: T003
 
