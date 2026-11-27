@@ -182,6 +182,8 @@ Acceptance:
 
 ### T009 - Implement authentication and role middleware
 
+Status: Complete
+
 Priority: P0
 Dependencies: T006, T008
 
