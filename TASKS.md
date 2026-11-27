@@ -298,6 +298,8 @@ Acceptance:
 
 ### T015 - Implement menu item search and sorting
 
+Status: Complete
+
 Priority: P1
 Dependencies: T014
 

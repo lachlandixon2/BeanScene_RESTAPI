@@ -1,4 +1,4 @@
-import type { HydratedDocument } from 'mongoose';
+import { Types, type HydratedDocument } from 'mongoose';
 import { MenuItem, type MenuItemDocument, type MenuItemTags } from '../models/MenuItem.js';
 
 export interface MenuItemRecord {
@@ -24,11 +24,35 @@ export interface MenuItemRepositoryUpdate {
   availability?: boolean;
 }
 
+export interface MenuItemListOptions {
+  page: number;
+  limit: number;
+  search?: string;
+  category?: string;
+  dietary?: string;
+  allergen?: string;
+  availability?: boolean;
+  sortBy: 'name' | 'price' | 'category';
+  sortOrder: 'asc' | 'desc';
+}
+
+interface MenuItemListDocument {
+  _id: Types.ObjectId;
+  name: string;
+  description?: string;
+  price: number;
+  category: Types.ObjectId;
+  photoUrl?: string;
+  allergens: MenuItemTags;
+  dietaryRequirements: MenuItemTags;
+  availability: boolean;
+}
+
 function toMenuItemRecord(
-  menuItem: HydratedDocument<MenuItemDocument>,
+  menuItem: HydratedDocument<MenuItemDocument> | MenuItemListDocument,
 ): MenuItemRecord {
   return {
-    id: menuItem.id,
+    id: menuItem._id.toString(),
     name: menuItem.name,
     ...(menuItem.description !== undefined ? { description: menuItem.description } : {}),
     price: menuItem.price,
@@ -48,16 +72,59 @@ function toMenuItemRecord(
   };
 }
 
+function escapeRegularExpression(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 export async function listMenuItems(
-  page: number,
-  limit: number,
+  query: MenuItemListOptions,
 ): Promise<{ menuItems: MenuItemRecord[]; total: number }> {
+  const filter: {
+    $or?: Array<{ name: RegExp } | { description: RegExp }>;
+    category?: Types.ObjectId;
+    'dietaryRequirements.tags'?: string;
+    'allergens.tags'?: string;
+    availability?: boolean;
+  } = {};
+  if (query.search !== undefined) {
+    const search = new RegExp(escapeRegularExpression(query.search), 'i');
+    filter.$or = [{ name: search }, { description: search }];
+  }
+  if (query.category !== undefined) filter.category = new Types.ObjectId(query.category);
+  if (query.dietary !== undefined) {
+    filter['dietaryRequirements.tags'] = query.dietary;
+  }
+  if (query.allergen !== undefined) filter['allergens.tags'] = query.allergen;
+  if (query.availability !== undefined) filter.availability = query.availability;
+
+  const direction: 1 | -1 = query.sortOrder === 'asc' ? 1 : -1;
+  const skip = (query.page - 1) * query.limit;
+  const sort = query.sortBy === 'price'
+    ? { price: direction, _id: 1 as const }
+    : { name: direction, _id: 1 as const };
+
+  const menuItemsPromise = query.sortBy === 'category'
+    ? MenuItem.aggregate<MenuItemListDocument>([
+        { $match: filter },
+        {
+          $lookup: {
+            from: 'categories',
+            localField: 'category',
+            foreignField: '_id',
+            as: 'categoryForSort',
+          },
+        },
+        { $unwind: '$categoryForSort' },
+        { $sort: { 'categoryForSort.name': direction, _id: 1 } },
+        { $skip: skip },
+        { $limit: query.limit },
+        { $project: { categoryForSort: 0 } },
+      ])
+    : MenuItem.find(filter).sort(sort).skip(skip).limit(query.limit);
+
   const [menuItems, total] = await Promise.all([
-    MenuItem.find()
-      .sort({ name: 1, _id: 1 })
-      .skip((page - 1) * limit)
-      .limit(limit),
-    MenuItem.countDocuments(),
+    menuItemsPromise,
+    MenuItem.countDocuments(filter),
   ]);
 
   return { menuItems: menuItems.map(toMenuItemRecord), total };
