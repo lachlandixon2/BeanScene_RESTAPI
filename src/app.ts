@@ -8,6 +8,7 @@ import { categoriesRouter } from './routes/categories.js';
 import { healthRouter } from './routes/health.js';
 import { menuItemsRouter } from './routes/menuItems.js';
 import { staffRouter } from './routes/staff.js';
+import { tablesRouter } from './routes/tables.js';
 
 export function createApp(): Express {
   const app = express();
@@ -31,6 +32,7 @@ export function createApp(): Express {
   app.use('/api/v1', staffRouter);
   app.use('/api/v1', categoriesRouter);
   app.use('/api/v1', menuItemsRouter);
+  app.use('/api/v1', tablesRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

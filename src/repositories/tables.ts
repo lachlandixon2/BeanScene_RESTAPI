@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { Types, type HydratedDocument } from 'mongoose';
 import { Table, type TableDocument, type TableStatus } from '../models/Table.js';
 
@@ -54,6 +55,13 @@ export async function tableNumberExists(
     ? { tableNumber, _id: { $ne: new Types.ObjectId(exceptTableId) } }
     : { tableNumber };
   return (await Table.exists(query)) !== null;
+}
+
+export async function isTableReferencedByOrders(tableId: string): Promise<boolean> {
+  const order = await mongoose.connection
+    .collection('orders')
+    .findOne({ table: new Types.ObjectId(tableId) }, { projection: { _id: 1 } });
+  return order !== null;
 }
 
 export async function createTable(data: {

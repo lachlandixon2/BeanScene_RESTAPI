@@ -357,6 +357,8 @@ Acceptance:
 
 ### T018 - Implement table service and endpoints
 
+Status: Complete
+
 Priority: P1
 Dependencies: T017, T009
 
