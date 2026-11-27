@@ -280,6 +280,8 @@ Acceptance:
 
 ### T014 - Implement menu item model and repository
 
+Status: Complete
+
 Priority: P1
 Dependencies: T003, T012
 
