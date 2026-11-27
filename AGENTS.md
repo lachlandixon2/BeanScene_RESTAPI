@@ -1,9 +1,3 @@
-Save the following as `AGENTS.md` in your project root.
-
-markdown
-
-````markdown
-
 # AGENTS.md
 
 # Bean Scene Ordering System – REST API
@@ -297,4 +291,3 @@ When working on this project:
 14. Prefer straightforward, readable solutions that demonstrate sound software engineering principles.
 
 **General rule:** Prioritise correctness, security, consistency and maintainability while keeping implementations appropriate for a university-level learning project.
-````
