@@ -145,6 +145,8 @@ Acceptance:
 
 ### T007 - Seed the initial manager
 
+Status: Complete
+
 Priority: P0
 Dependencies: T005, T006
 

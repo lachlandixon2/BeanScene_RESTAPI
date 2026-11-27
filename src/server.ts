@@ -1,9 +1,11 @@
 import { createApp } from './app.js';
 import { connectDatabase, disconnectDatabase } from './config/database.js';
 import { env } from './config/env.js';
+import { seedInitialManager } from './services/seedInitialManager.js';
 
 async function start(): Promise<void> {
   await connectDatabase();
+  await seedInitialManager();
 
   const app = createApp();
   const server = app.listen(env.port, () => {
