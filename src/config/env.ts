@@ -32,7 +32,7 @@ export const env: Environment = {
   nodeEnv,
   mongodbUri: required('MONGODB_URI'),
   jwtSecret: required('JWT_SECRET'),
-  jwtExpiresIn: process.env.JWT_EXPIRES_IN?.trim() || '8h',
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN?.trim() || '15m',
   initialManagerName: required('INITIAL_MANAGER_NAME'),
   initialManagerEmail: required('INITIAL_MANAGER_EMAIL'),
   initialManagerPassword: required('INITIAL_MANAGER_PASSWORD'),

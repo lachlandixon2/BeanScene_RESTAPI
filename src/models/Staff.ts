@@ -1,8 +1,15 @@
-import { model, Schema, type InferSchemaType } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
 export type StaffRole = 'staff' | 'manager';
 
-const staffSchema = new Schema(
+interface StaffFields {
+  name: string;
+  email: string;
+  passwordHash: string;
+  role: StaffRole;
+}
+
+const staffSchema = new Schema<StaffFields>(
   {
     name: {
       type: String,
@@ -44,5 +51,5 @@ const staffSchema = new Schema(
 
 staffSchema.index({ role: 1 });
 
-export type StaffDocument = InferSchemaType<typeof staffSchema>;
-export const Staff = model('Staff', staffSchema);
+export type StaffDocument = StaffFields;
+export const Staff = model<StaffFields>('Staff', staffSchema);

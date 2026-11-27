@@ -162,6 +162,8 @@ Acceptance:
 
 ### T008 - Implement login and logout endpoints
 
+Status: Complete
+
 Priority: P0
 Dependencies: T006, T007
 

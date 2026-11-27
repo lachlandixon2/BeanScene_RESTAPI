@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { env } from './config/env.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+import { authRouter } from './routes/auth.js';
 import { healthRouter } from './routes/health.js';
 
 export function createApp(): Express {
@@ -23,6 +24,7 @@ export function createApp(): Express {
   app.use(express.json({ limit: '1mb' }));
 
   app.use('/api/v1', healthRouter);
+  app.use('/api/v1', authRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

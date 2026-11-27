@@ -26,6 +26,19 @@ export function errorHandler(
     return;
   }
 
+  if (
+    error instanceof SyntaxError &&
+    'type' in error &&
+    error.type === 'entity.parse.failed'
+  ) {
+    response.status(400).json({
+      success: false,
+      message: 'Invalid JSON request body',
+      errors: [],
+    });
+    return;
+  }
+
   if (error instanceof mongoose.mongo.MongoServerError && error.code === 11000) {
     response.status(409).json({
       success: false,
