@@ -202,6 +202,8 @@ Acceptance:
 
 ### T010 - Implement staff repositories and services
 
+Status: Complete
+
 Priority: P1
 Dependencies: T005, T009
 
