@@ -261,6 +261,8 @@ Acceptance:
 
 ### T013 - Implement category service and endpoints
 
+Status: Complete
+
 Priority: P1
 Dependencies: T012, T009
 

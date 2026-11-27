@@ -9,7 +9,7 @@ export interface CategoryRecord {
 
 export interface CategoryRepositoryUpdate {
   name?: string;
-  description?: string;
+  description?: string | null;
 }
 
 function toCategoryRecord(category: HydratedDocument<CategoryDocument>): CategoryRecord {
@@ -20,9 +20,19 @@ function toCategoryRecord(category: HydratedDocument<CategoryDocument>): Categor
   };
 }
 
-export async function listCategories(): Promise<CategoryRecord[]> {
-  const categories = await Category.find().sort({ name: 1 });
-  return categories.map(toCategoryRecord);
+export async function listCategories(
+  page: number,
+  limit: number,
+): Promise<{ categories: CategoryRecord[]; total: number }> {
+  const [categories, total] = await Promise.all([
+    Category.find()
+      .sort({ name: 1, _id: 1 })
+      .skip((page - 1) * limit)
+      .limit(limit),
+    Category.countDocuments(),
+  ]);
+
+  return { categories: categories.map(toCategoryRecord), total };
 }
 
 export async function findCategoryById(categoryId: string): Promise<CategoryRecord | null> {
@@ -52,9 +62,18 @@ export async function updateCategory(
   categoryId: string,
   updates: CategoryRepositoryUpdate,
 ): Promise<CategoryRecord | null> {
+  const setUpdates: { name?: string; description?: string } = {};
+  if (updates.name !== undefined) setUpdates.name = updates.name;
+  if (typeof updates.description === 'string') {
+    setUpdates.description = updates.description;
+  }
+
   const category = await Category.findByIdAndUpdate(
     categoryId,
-    { $set: updates },
+    {
+      $set: setUpdates,
+      ...(updates.description === null ? { $unset: { description: 1 } } : {}),
+    },
     { new: true, runValidators: true },
   );
   return category ? toCategoryRecord(category) : null;
