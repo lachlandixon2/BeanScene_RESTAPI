@@ -316,6 +316,8 @@ Acceptance:
 
 ### T016 - Implement menu item service and endpoints
 
+Status: Complete
+
 Priority: P1
 Dependencies: T014, T015, T009
 

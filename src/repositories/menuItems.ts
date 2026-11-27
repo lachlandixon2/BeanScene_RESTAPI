@@ -1,4 +1,4 @@
-import { Types, type HydratedDocument } from 'mongoose';
+import mongoose, { Types, type HydratedDocument } from 'mongoose';
 import { MenuItem, type MenuItemDocument, type MenuItemTags } from '../models/MenuItem.js';
 
 export interface MenuItemRecord {
@@ -183,4 +183,14 @@ export async function updateMenuItem(
 export async function deleteMenuItem(menuItemId: string): Promise<boolean> {
   const result = await MenuItem.deleteOne({ _id: menuItemId });
   return result.deletedCount > 0;
+}
+
+export async function isMenuItemReferencedByOrders(menuItemId: string): Promise<boolean> {
+  const order = await mongoose.connection
+    .collection('orders')
+    .findOne(
+      { 'items.menuItem': new Types.ObjectId(menuItemId) },
+      { projection: { _id: 1 } },
+    );
+  return order !== null;
 }
