@@ -15,6 +15,8 @@ Tasks are ordered by implementation dependency and priority:
 
 ### T001 - Initialise the Node.js and TypeScript project
 
+Status: Complete
+
 Priority: P0
 Dependencies: None
 
@@ -31,6 +33,8 @@ Acceptance:
 - The application starts through a documented npm command.
 
 ### T002 - Add environment configuration
+
+Status: Complete
 
 Priority: P0
 Dependencies: T001
@@ -59,6 +63,8 @@ Acceptance:
 
 ### T003 - Configure MongoDB and application infrastructure
 
+Status: Complete
+
 Priority: P0
 Dependencies: T001, T002
 
@@ -76,6 +82,8 @@ Acceptance:
 - All API errors use the PRD response envelope.
 
 ### T004 - Create shared models and validation infrastructure
+
+Status: Complete
 
 Priority: P0
 Dependencies: T001, T003
@@ -96,6 +104,8 @@ Acceptance:
 ## 3. Authentication
 
 ### T005 - Implement staff data model
+
+Status: Complete
 
 Priority: P0
 Dependencies: T003
